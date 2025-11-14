@@ -36,7 +36,16 @@ app.use(async (req, res) => {
     console.log("target url", targetUrl);
 
     const curl = new Curl();
+    // 新增：如果配置了上游代理，就全局走这个 HTTP proxy
+    if (UPSTREAM_PROXY) {
+      curl.useProxy(true).proxy(UPSTREAM_PROXY);
+    }
 
+    // 新增：如果需要禁用 SSL 证书验证，就加上 --insecure（等价于 curl -k）
+    if (INSECURE_SSL) {
+      curl.cliOptions(["--insecure"]);
+      // 或者 curl.cliOptions(["-k"]);
+    }
     const body = await getRawBody(req);
     const bodyStr = body.toString();
 
