@@ -3,7 +3,13 @@ import { Curl } from "curl-wrap";
 import { DEBUG_ENV, PORT } from "./env";
 
 import getRawBody from "raw-body";
+// 新增：可选的全局 HTTP 代理 & 是否跳过 SSL 验证
+const UPSTREAM_PROXY =
+  process.env.UPSTREAM_PROXY ||
+  process.env.HTTP_PROXY ||
+  process.env.http_proxy;
 
+const INSECURE_SSL = process.env.INSECURE_SSL === "1";
 // https://github.com/TypeStrong/ts-node/discussions/1290
 const dynamicImport = new Function("specifier", "return import(specifier)") as <
   T
